@@ -1,0 +1,130 @@
+
+These scripts are prepared for RunPod but they would work on any Linux system. It can be local or Cloud. Just change the paths accurately.
+
+If you register RunPod with my link I appreicate : https://runpod.io?ref=1aka98lq
+
+Login your pod you can use this link : https://runpod.io?ref=1aka98lq
+
+If you don't know how to setup a Pod here written tutorial : 
+https://medium.com/@furkangozukara/how-to-deploy-a-pod-on-runpod-and-verify-it-is-working-20e47031c0b5
+
+Full ControlNet Tutorial : https://youtu.be/3E5fhFQUVLo
+
+Select your GPU. I think best price / performance is RTX 3090
+
+Select runpod template runpod/stable-diffusion:web-ui-10.2.1
+You can use either community cloud, private or network stroage
+
+Customize deployment
+Make volume disk 150 gb - or any size you want according to your needs
+
+Wait until you can click Connect and Connect to Jupyter Lab [Port 8888]
+
+Enter inside stable-diffusion-webui folder
+Upload relauncher.py and overwrite file. Then restart your pod. This is mandatory only 1 time.
+This is important to kill auto started Automatic1111 Web UI instance and start our own from terminal.
+
+Then upload everything into workspace folder.
+
+If you want to install everything and download everything run below command
+
+export HF_HOME="/workspace"
+cd /workspace
+chmod +x install_all.sh
+./install_all.sh
+
+If you execute above code and install all, you don't need any of below. They will all be installed.
+
+Now we have different installers
+
+The first one is install_latest_auto_1111.sh
+
+This file will update automatic1111 to the latest version and its controlnet extension to latest version including insightface library - but will not download controlnet models yet
+
+Then it will automatically start latest version of automatic1111 SD web ui with latest version ControlNet
+
+This file will download 275 Amazing Fooocus styles csv that you can use in Automatic1111 SD Web UI
+
+To run it copy paste below command
+
+export HF_HOME="/workspace"
+cd /workspace
+chmod +x install_latest_auto_1111.sh
+./install_latest_auto_1111.sh
+cd /workspace/stable-diffusion-webui
+python relauncher.py
+
+After that if you want to install TensorRT execute below code. this will also updated controlnet (including insightface library) and tensorRT to latest version and restart automatic1111 web UI
+
+TensorRT not yet supporting ControlNet but they have a development branch : https://github.com/NVIDIA/Stable-Diffusion-WebUI-TensorRT/tree/controlnet_v2 
+
+This file will download 275 Amazing Fooocus styles csv that you can use in Automatic1111 SD Web UI
+
+This is almost ready i am waiting it to be merged into main to update
+
+The tutorial of TensorRT here : https://youtu.be/kvxX6NrPtEk
+
+And another tutorial of TensorRT : https://youtu.be/eKnMVXVjVoU
+
+export HF_HOME="/workspace"
+cd /workspace
+chmod +x install_tensorRT.sh
+./install_tensorRT.sh
+cd /workspace/stable-diffusion-webui
+python relauncher.py
+
+Let's say you want to download all controlnet models
+Then you need to run below command
+This command will download huge amount of models 40GB+
+
+control_net_downloader.py file will download all of the available ControlNet models that I know total number of 52.
+The downloader will download into the accurate folder with accurate naming.
+
+python download_ip_adapter_and_instantid.py will download ip-adapter-faceid-plusv2_sd15_lora, ip-adapter-faceid-plusv2_sdxl_lora, ip-adapter_instant_id_sdxl and control_instant_id_sdxl into the accurate folders with accurate naming. Accurate naming is crucial.
+
+I will hopefully update scripts if there be new model releases.
+
+export HF_HOME="/workspace"
+cd /workspace
+python control_net_downloader.py
+python download_ip_adapter_and_instantid.py
+
+Using ip-adapter-faceid and instant_id_sdxl are not straight forward. 
+
+Please read the following threads:
+
+Ip Adapter Face ID of ControlNet : https://github.com/Mikubill/sd-webui-controlnet/discussions/2442
+InstantID of ControlNet : https://github.com/Mikubill/sd-webui-controlnet/discussions/2589
+
+However I find that, these both models are working very poor compared to my direct implementation of their pipelines into a single Gradio app with 1 click installer.
+
+You can download them from
+
+1 Click Automatic Installer & A Very Advanced GUI For InstantId For Windows, RunPod, Linux & Kaggle Notebook:
+https://www.patreon.com/posts/1-click-very-gui-97769887
+
+IP-Adapter-FaceID-PlusV2 - 0 Shot Face Transfer - Auto Installer & Gradio App
+https://www.patreon.com/posts/ip-adapter-0-app-95759342
+
+Both of my apps has instructions and installers for both Windows, RunPod (Linux) & Kaggle notebooks
+
+after this operation i suggest you to restart your web ui with following command
+fuser -k 3000/tcp
+cd /workspace/stable-diffusion-webui
+python relauncher.py
+
+You can also run download_models.py file
+
+This file will download the following models
+
+Realistic_Vision_V6 (SD 1.5 based model - one of the very best)
+sdxl-vae-fp16-fix - fixed SDXL VAE in FP16 so you can run in Automatic1111 in FP16
+playground-v2-1024px - which is a very high aesthetic score having SDXL model
+Hyper_Realism_V3 - which is the best SD 1.5 realism model that I find
+
+To download any custom model you want, execute below command
+cd /workspace/stable-diffusion-webui/models/Stable-diffusion
+
+Then use below format
+wget "download_link_of_model"
+
